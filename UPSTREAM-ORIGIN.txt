@@ -1,4 +1,4 @@
-Upstream: https://raw.githubusercontent.com/matke-84/repository.bingie/main/omega/script.module.bingie/script.module.bingie-1.0.1.zip
-Original version: 1.0.1
-SHA256 of upstream ZIP: 8861230b0e02da06460c2f04ebbc4bac693a7648171dad1fbd551de1be250686
-Source files are included for independent editing. Preserve authorship and license notices.
+Original Kodi add-on: script.module.bingie
+Upstream version: 1.0.1
+Source ZIP: https://github.com/matke-84/repository.bingie/raw/refs/heads/main/omega/script.module.bingie/script.module.bingie-1.0.1.zip
+Imported intact (except archive root), with original credits/licenses retained.
