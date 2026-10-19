@@ -267,6 +267,10 @@ class SimpleCache(object):
             if xbmcvfs.exists(self._db_file):
                 return
             database = self._create_database()
+            if database is None:
+                # Retry initialization on the next call if Android storage
+                # is not ready instead of marking cache setup as successful.
+                return None
             cur_time = set_timestamp(0, True)
             self.set_window_property(f'{self._sc_name}.clean.lastexecuted', str(cur_time - self._auto_clean_interval + 600))
         return database
