@@ -282,20 +282,23 @@ class SimpleCache(object):
             )""")
 
     def _create_database(self):
+        # Kodi 22 can run on Android storage that is temporarily unavailable
+        # or read-only. Do not access an undefined connection when opening
+        # the cache failed.
         try:
             self.kodi_log(f'CACHE: Initialising: {self._db_file}...', 1)
             connection = sqlite3.connect(self._db_file, timeout=5.0, isolation_level=None)
+        except Exception as error:
+            self.kodi_log(f'CACHE: Exception while opening _database: {error}\n{self._sc_name}', 1)
+            return None
+        try:
             self.create_database_execute(connection)
-        except Exception as error:
-            self.kodi_log(f'CACHE: Exception while initializing _database: {error}\n{self._sc_name}', 1)
-        try:
-            connection.execute("CREATE INDEX idx ON simplecache(id)")
-        except Exception as error:
-            self.kodi_log(f'CACHE: Exception while creating index for _database: {error}\n{self._sc_name}', 1)
-        try:
+            connection.execute("CREATE INDEX IF NOT EXISTS idx ON simplecache(id)")
             return self._set_pragmas(connection)
         except Exception as error:
-            self.kodi_log(f'CACHE: Exception while setting pragmas for _database: {error}\n{self._sc_name}', 1)
+            self.kodi_log(f'CACHE: Exception while initializing _database: {error}\n{self._sc_name}', 1)
+            connection.close()
+            return None
 
     def _get_database(self, read_only=False, log_level=1):
         timeout = self._db_read_timeout if read_only else self._db_timeout
